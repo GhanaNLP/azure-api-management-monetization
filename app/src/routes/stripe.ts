@@ -29,11 +29,10 @@ export const register = (app: express.Application) => {
             apiVersion: '2020-08-27',
         });
 
-
         // List the prices for that product in Stripe
         const prices = (await stripe.prices.list({ product: apimProduct.name, active: true })).data;
 
-        const pricingModelType = monetizationModel.pricingModelType;
+        const {id, pricingModelType} = monetizationModel;
 
         const cancelUrlQuery = querystring.stringify({
             operation,
@@ -48,7 +47,7 @@ export const register = (app: express.Application) => {
         const cancelUrl = returnUrlBase + "/cancel?" + cancelUrlQuery;
         const successUrl = returnUrlBase + "/success";
 
-        const session: Stripe.Checkout.Session = await createCheckoutSession(userEmail, cancelUrl, successUrl, apimUserId, apimProductId, apimSubscriptionName, prices[0], pricingModelType, stripe);
+        const session: Stripe.Checkout.Session = await createCheckoutSession(userEmail, cancelUrl, successUrl, apimUserId, apimProductId, apimSubscriptionName, prices[0], pricingModelType, stripe, id);
 
         res.json({ id: session.id });
     });
@@ -133,7 +132,8 @@ async function createCheckoutSession(
     apimSubscriptionName: string,
     price: Stripe.Price,
     pricingModelType: string,
-    stripe: Stripe
+    stripe: Stripe,
+    id: string,
 ) {
     let session: Stripe.Checkout.Session;
 
@@ -149,7 +149,8 @@ async function createCheckoutSession(
                 [ApimProductIdKey]: apimProductId,
                 [ApimSubscriptionNameKey]: apimSubscriptionName
             }
-        }
+        },
+        ...(id === "developer" && { payment_method_collection: 'if_required' }),
     };
 
     let lineItems: Stripe.Checkout.SessionCreateParams.LineItem[];
