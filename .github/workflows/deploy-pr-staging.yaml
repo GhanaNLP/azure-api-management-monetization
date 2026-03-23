@@ -3,10 +3,8 @@ name: Deploy PR to Staging Slot
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    # This ensures it runs when you push new commits to your draft PR
     
 env:
-  # Replace with your actual Azure Web App name
   AZURE_WEBAPP_NAME: 'translation-ghananlp' 
   SLOT_NAME: 'translation-api-billingportal-nlpghana-staging'
 
@@ -28,7 +26,6 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build and tag the image using the PR number
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v4
         with:
@@ -37,7 +34,6 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}/app:pr-${{ github.event.pull_request.number }}
 
-      # Deploy the image to the testbilling-staging slot
       - name: Deploy to Azure Web App Slot
         uses: azure/webapps-deploy@v2
         with:
