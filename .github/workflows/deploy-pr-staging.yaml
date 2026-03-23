@@ -32,7 +32,7 @@ jobs:
           context: ./app
           file: ./app/Dockerfile
           push: true
-          tags: ghcr.io/GhanaNLP/azure-api-management-monetization/app:pr-${{ github.event.pull_request.number }}
+          tags: ghcr.io/ghananlp/azure-api-management-monetization/app:pr-${{ github.event.pull_request.number }}
 
       - name: Deploy to Azure Web App Slot
         uses: azure/webapps-deploy@v2
@@ -40,4 +40,4 @@ jobs:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_BILLING_STAGING_SLOT_PUBLISH_PROFILE }}
           slot-name: ${{ env.SLOT_NAME }}
-          images: 'ghcr.io/GhanaNLP/azure-api-management-monetization/app:pr-${{ github.event.pull_request.number }}'
+          images: 'ghcr.io/ghananlp/azure-api-management-monetization/app:pr-${{ github.event.pull_request.number }}'
