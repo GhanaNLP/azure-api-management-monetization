@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
     
 env:
-  AZURE_WEBAPP_NAME: 'translation-ghananlp' 
+  AZURE_WEBAPP_NAME: 'translation-api-billingportal-nlpghana' 
   SLOT_NAME: 'translation-api-billingportal-nlpghana-staging'
 
 jobs:
