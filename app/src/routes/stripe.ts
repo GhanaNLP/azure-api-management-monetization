@@ -29,7 +29,6 @@ export const register = (app: express.Application) => {
             apiVersion: '2020-08-27',
         });
 
-
         // List the prices for that product in Stripe
         const prices = (await stripe.prices.list({ product: apimProduct.name, active: true })).data;
 
