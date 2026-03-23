@@ -38,6 +38,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_SLOT_PUBLISH_PROFILE }}
+          publish-profile: ${{ secrets.AZURE_BILLING_STAGING_SLOT_PUBLISH_PROFILE }}
           slot-name: ${{ env.SLOT_NAME }}
           images: 'ghcr.io/${{ github.repository }}/app:pr-${{ github.event.pull_request.number }}'
