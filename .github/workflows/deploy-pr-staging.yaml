@@ -32,7 +32,7 @@ jobs:
           context: ./app
           file: ./app/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}/app:pr-${{ github.event.pull_request.number }}
+          tags: ghcr.io/ghananlp/app:pr-${{ github.event.pull_request.number }}
 
       - name: Deploy to Azure Web App Slot
         uses: azure/webapps-deploy@v2
