@@ -6,7 +6,7 @@ on:
     
 env:
   AZURE_WEBAPP_NAME: 'translation-api-billingportal-nlpghana' 
-  SLOT_NAME: 'translation-api-billingportal-nlpghana-staging'
+  SLOT_NAME: 'staging'
 
 jobs:
   build-and-deploy-slot:
