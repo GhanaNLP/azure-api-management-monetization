@@ -4,7 +4,7 @@
 
 <form action="/subscribe" method="post">
     <label for="subscriptionName">Subscription name</label>
-    <input id="subscriptionName" name="subscriptionName" type="text"/>
+    <input id="subscriptionName" name="subscriptionName" type="text" required pattern=".*\S+.*" title="Please enter a valid subscription name."/>
     <input type="submit" value="Checkout">
     <input type="hidden" name="operation" value="<%= subscribeRequest.operation %>"/>
     <input type="hidden" name="returnUrl" value="<%= subscribeRequest.returnUrl %>"/>

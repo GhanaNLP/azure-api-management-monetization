@@ -110,7 +110,12 @@ export const register = (app: express.Application, billingService: BillingServic
             return;
         }
 
-        const subscriptionName = req.body.subscriptionName as string;
+        const subscriptionName = (req.body.subscriptionName as string || "").trim();
+
+        if (!subscriptionName) {
+            res.status(400).send("Subscription name is required");
+            return;
+        }
 
         const user = await apimService.getUser(subscribeRequest.userId);
 
