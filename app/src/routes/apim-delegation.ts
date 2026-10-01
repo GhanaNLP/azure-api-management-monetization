@@ -212,22 +212,37 @@ export const register = (app: express.Application, billingService: BillingServic
             sig: req.body.sig as string,
         }
 
-        try {
-            await apimService.createUser(email, password, firstName, lastName);
-        }
-        catch (error) {
+        const redirectWithError = (errorMessage: string, operation = signUpSignInRequest.operation) => {
             const query = querystring.stringify({
-                errorMessage: "Invalid credentials",
+                errorMessage,
                 returnUrl: signUpSignInRequest.returnUrl,
-                operation: signUpSignInRequest.operation,
+                operation,
                 salt: signUpSignInRequest.salt,
                 sig: signUpSignInRequest.sig
             });
             res.redirect('/apim-delegation?' + query);
+        };
+
+        try {
+            if (await apimService.userExists(email)) {
+                redirectWithError("An account with this email already exists. Please sign in instead.", "SignIn");
+                return;
+            }
+            await apimService.createUser(email, password, firstName, lastName);
+        }
+        catch (error) {
+            console.error("Sign up failed", error);
+            redirectWithError(error?.message || "Sign up failed. Please try again.");
             return;
         }
 
-        const { userId } = await ApimService.authenticateUser(email, password);
+        const { authenticated, userId } = await ApimService.authenticateUser(email, password);
+
+        if (!authenticated) {
+            redirectWithError("Account created, but sign in failed. Please sign in.");
+            return;
+        }
+
         const { value: token } = await apimService.getSharedAccessToken(userId);
 
         const redirectQuery = querystring.stringify({
