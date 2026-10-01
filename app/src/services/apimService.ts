@@ -99,6 +99,15 @@ export class ApimService {
         return await this.managementClient.user.getSharedAccessToken(this.resourceGroupName, this.serviceName, userId, { expiry, keyType: "primary" });
     }
 
+    /** Check whether a user with this email already exists */
+    public async userExists(email: string) : Promise<boolean> {
+        await this.initialize();
+
+        const filter = `email eq '${email.replace(/'/g, "''")}'`;
+        const users = await this.managementClient.user.listByService(this.resourceGroupName, this.serviceName, { filter, top: 1 });
+        return users.length > 0;
+    }
+
     /** Create a new user */
     public async createUser(email: string, password: string, firstName: string, lastName: string) : Promise<UserCreateOrUpdateResponse> {
         await this.initialize();
@@ -124,6 +133,9 @@ export class ApimService {
             const managementApiUrl = Utils.ensureUrlArmified(process.env.APIM_MANAGEMENT_URL)
             const url = `${managementApiUrl}/identity?api-version=2019-12-01`
             const response = await fetch(url, { method: "GET", headers: { Authorization: credentials } });
+            if (!response.ok) {
+                return { authenticated: false };
+            }
             const sasToken = response.headers.get("Ocp-Apim-Sas-Token");
             const identity = await response.json() as { id: string };
 
