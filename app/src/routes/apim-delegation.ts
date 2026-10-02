@@ -231,6 +231,7 @@ export const register = (app: express.Application, billingService: BillingServic
             await apimService.createUser(email, password, firstName, lastName);
         }
         catch (error) {
+            // tslint:disable-next-line:no-console
             console.error("Sign up failed", error);
             redirectWithError(error?.message || "Sign up failed. Please try again.");
             return;
